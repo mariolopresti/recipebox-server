@@ -115,6 +115,8 @@ app.post('/api/login', (req, res) => {
 
     return res.json({
       message: 'Login effettuato con successo',
+      username: user.username,
+      id: user.id
     });
   });
 
