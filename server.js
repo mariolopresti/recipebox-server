@@ -49,6 +49,44 @@ app.get('/api/recipes', (req, res) => {
 });
 
 
+app.post('/api/recipes', (req, res) => {
+  // Estraiamo tutti i campi dal body della richiesta
+  const {
+    nome,
+    ingredienti,
+    tempoPreparazione,
+    difficolta,
+    immagine,
+    descrizione,
+    preparazione
+  } = req.body;
+
+  // Query SQL con tutti i campi della tua tabella
+  const sql = `INSERT INTO recipes (nome, ingredienti, tempoPreparazione, difficolta, immagine, descrizione, preparazione) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+  const values = [
+    nome,
+    ingredienti,
+    tempoPreparazione,
+    difficolta,
+    immagine,
+    descrizione,
+    preparazione
+  ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Errore durante l\'inserimento:', err);
+      return res.status(500).json({ error: 'Errore nel database durante l\'inserimento' });
+    }
+
+    return res.status(201).json({
+      message: 'Ricetta inserita con successo!',
+      id: result.insertId
+    });
+  });
+});
+
 app.listen(process.env.PORT || 8080, () => {
   console.log("Server started on port 8080");
 })
