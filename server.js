@@ -87,6 +87,40 @@ app.post('/api/recipes', (req, res) => {
   });
 });
 
+
+// LOGIN
+app.post('/api/login', (req, res) => {
+  const {username, password} = req.body;
+
+  const sql = 'SELECT * FROM users WHERE username = ?';
+
+  db.query(sql, [username], async (err, results) => {
+    if (err) {
+      console.error('Errore query login:', err);
+      return res.status(500).json({ error: 'Errore nel database' });
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ error: 'Utente non trovato' });
+    }
+
+    const user = results[0];
+
+    // Fatto in modo basilare
+    const isMatch =  user.password.toString() === password.toString() ;
+
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Password errata' });
+    }
+
+    return res.json({
+      message: 'Login effettuato con successo',
+    });
+  });
+
+});
+
+
 app.listen(process.env.PORT || 8080, () => {
   console.log("Server started on port 8080");
 })
