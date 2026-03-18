@@ -1,4 +1,4 @@
-import express, {json} from 'express';
+import express, { json } from 'express';
 import mysql from 'mysql';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -62,7 +62,7 @@ app.post('/api/recipes', (req, res) => {
     id_user
   } = req.body;
 
-  // Query SQL con tutti i campi della tua tabella
+  // Query SQL con tutti i campi della tabella
   const sql = `INSERT INTO recipes (nome, ingredienti, tempoPreparazione, difficolta, immagine, descrizione, preparazione, id_user) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
   const values = [
@@ -141,22 +141,22 @@ app.delete('/api/recipes/delete/:id', (req, res) => {
   db.query(sql, [recipeId], (err, result) => {
     if (err) {
       console.error('Errore durante la cancellazione della ricetta:', err);
-      return res.status(500).json({error: 'Errore nel database'});
+      return res.status(500).json({ error: 'Errore nel database' });
     }
 
     // result.affectedRows ci dice quante righe sono state cancellate
     if (result.affectedRows === 0) {
-      return res.status(404).json({message: 'Ricetta non trovata'});
+      return res.status(404).json({ message: 'Ricetta non trovata' });
     }
 
     console.log(`Ricetta con ID ${recipeId} eliminata.`);
-    return res.json({message: 'Ricetta eliminata con successo'});
+    return res.json({ message: 'Ricetta eliminata con successo' });
   });
 });
 
 // LOGIN
 app.post('/api/login', (req, res) => {
-  const {username, password} = req.body;
+  const { username, password } = req.body;
 
   const sql = 'SELECT * FROM users WHERE username = ?';
 
@@ -173,7 +173,7 @@ app.post('/api/login', (req, res) => {
     const user = results[0];
 
     // Fatto in modo basilare
-    const isMatch =  user.password.toString() === password.toString() ;
+    const isMatch = user.password.toString() === password.toString();
 
     if (!isMatch) {
       return res.status(401).json({ error: 'Password errata' });
