@@ -48,7 +48,7 @@ app.get('/api/recipes', (req, res) => {
   });
 });
 
-
+// add new recipe
 app.post('/api/recipes', (req, res) => {
   // Estraiamo tutti i campi dal body della richiesta
   const {
@@ -86,6 +86,49 @@ app.post('/api/recipes', (req, res) => {
       message: 'Ricetta inserita con successo!',
       id: result.insertId
     });
+  });
+});
+
+// EDIT: Modifica una ricetta tramite ID
+app.patch('/api/recipes/edit/:id', (req, res) => {
+  const recipeId = req.params.id;
+
+  const {
+    nome,
+    ingredienti,
+    tempoPreparazione,
+    difficolta,
+    immagine,
+    descrizione,
+    preparazione,
+    id_user
+  } = req.body;
+
+  const sql = `
+    UPDATE recipes
+    SET nome = ?, ingredienti = ?, tempoPreparazione = ?, difficolta = ?, immagine = ?, descrizione = ?, preparazione = ?, id_user = ?
+    WHERE id = ?
+  `;
+
+  const values = [
+    nome,
+    ingredienti,
+    tempoPreparazione,
+    difficolta,
+    immagine,
+    descrizione,
+    preparazione,
+    id_user,
+    recipeId
+  ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Errore durante l\'aggiornamento della ricetta:', err);
+      return res.status(500).json({ error: 'Errore nel database' });
+    }
+
+    return res.json({ message: 'Ricetta aggiornata con successo' });
   });
 });
 
